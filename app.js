@@ -11,6 +11,17 @@ app.post("/", (request, response) => {
   response.send("works");
 });
 
+app.put("/:id", (request, response) => {
+  console.log(request.params.id, "id");
+  response.send(request.body);
+});
+
+app.delete("/:blue", (request, response) => {
+  console.log(request.body, "body");
+  console.log(request.params.blue, "id");
+  response.send("");
+});
+
 app.listen(3000, () => {
   console.log("working");
 });
