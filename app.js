@@ -3,12 +3,12 @@ const app = express();
 app.use(express.json());
 
 app.get("/", (request, response) => {
-  response.send("Hi");
+  response.status(200).send("Hi");
 });
 
 app.post("/", (request, response) => {
   console.log(request.body, "user");
-  response.send("works");
+  response.status(201).send("works");
 });
 
 app.put("/:id", (request, response) => {
@@ -19,7 +19,7 @@ app.put("/:id", (request, response) => {
 app.delete("/:blue", (request, response) => {
   console.log(request.body, "body");
   console.log(request.params.blue, "id");
-  response.send("");
+  response.status(204).send("");
 });
 
 app.listen(3000, () => {
