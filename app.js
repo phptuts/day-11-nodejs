@@ -1,14 +1,15 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-
+let users = [];
 app.get("/", (request, response) => {
-  response.status(200).send("Hi");
+  response.status(200).json(users);
 });
 
 app.post("/", (request, response) => {
   console.log(request.body, "user");
-  response.status(201).send("works");
+  users.push(request.body);
+  response.status(201).json(request.body);
 });
 
 app.put("/:id", (request, response) => {
