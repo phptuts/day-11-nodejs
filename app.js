@@ -7,29 +7,19 @@ app.get("/", (request, response) => {
 });
 
 app.post("/", (request, response) => {
-  const user = request.body;
-  user.id = Date.now();
-  users.push(user);
+  console.log(request.body, "user");
+  users.push(request.body);
   response.status(201).json(request.body);
 });
 
 app.put("/:id", (request, response) => {
-  const user = request.body;
-  const id = +request.params.id;
-  user.id = id;
-  const newUsers = users.filter((u) => u.id !== id);
-  if (newUsers.length === users.length) {
-    response.status(404).send({ message: "User not found" });
-    return;
-  }
-  newUsers.push(user);
-  users = newUsers;
-  response.send(user);
+  console.log(request.params.id, "id");
+  response.send(request.body);
 });
 
-app.delete("/:id", (request, response) => {
-  const id = +request.params.id;
-  users = users.filter((u) => u.id !== id);
+app.delete("/:blue", (request, response) => {
+  console.log(request.body, "body");
+  console.log(request.params.blue, "id");
   response.status(204).send("");
 });
 
