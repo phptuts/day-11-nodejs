@@ -7,9 +7,10 @@ app.get("/", (request, response) => {
 });
 
 app.post("/", (request, response) => {
-  console.log(request.body, "user");
-  users.push(request.body);
-  response.status(201).json(request.body);
+  let user = request.body;
+  user.id = Date.now();
+  users.push(user);
+  response.status(201).json(user);
 });
 
 app.put("/:id", (request, response) => {
@@ -17,9 +18,9 @@ app.put("/:id", (request, response) => {
   response.send(request.body);
 });
 
-app.delete("/:blue", (request, response) => {
-  console.log(request.body, "body");
-  console.log(request.params.blue, "id");
+app.delete("/:id", (request, response) => {
+  const id = +request.params.id;
+  users = users.filter((u) => u.id !== id);
   response.status(204).send("");
 });
 
