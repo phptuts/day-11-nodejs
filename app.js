@@ -13,6 +13,18 @@ app.post("/", (request, response) => {
   response.status(201).json(user);
 });
 
+app.get("/:id", (request, response) => {
+  const id = +request.params.id;
+  let user = users.find((u) => u.id === id);
+
+  if (!user) {
+    response.status(404).send("User not found");
+    return;
+  }
+
+  response.json(user);
+});
+
 app.put("/:id", (request, response) => {
   console.log(request.params.id, "id");
   response.send(request.body);
