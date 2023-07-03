@@ -26,8 +26,20 @@ app.get("/:id", (request, response) => {
 });
 
 app.put("/:id", (request, response) => {
-  console.log(request.params.id, "id");
-  response.send(request.body);
+  const id = +request.params.id;
+  let user = users.find((u) => u.id === id);
+
+  if (!user) {
+    response.status(404).send("User not found");
+    return;
+  }
+
+  users = users.filter((u) => u.id !== id);
+  user = request.body;
+  user.id = id;
+  users.push(user);
+
+  response.send(user);
 });
 
 app.delete("/:id", (request, response) => {
