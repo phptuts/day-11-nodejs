@@ -1,13 +1,13 @@
+const { UserModel } = require("../database/db");
+
 let users = [];
 
 const getAllUser = (request, response) => {
   response.status(200).json(users);
 };
 
-const createUser = (request, response) => {
-  let user = request.body;
-  user.id = Date.now();
-  users.push(user);
+const createUser = async (request, response) => {
+  const user = await UserModel.create(request.body);
   response.status(201).json(user);
 };
 
