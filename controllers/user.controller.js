@@ -1,8 +1,7 @@
 const { UserModel } = require("../database/db");
 
-let users = [];
-
-const getAllUser = (request, response) => {
+const getAllUser = async (request, response) => {
+  const users = await UserModel.findAll();
   response.status(200).json(users);
 };
 
@@ -11,9 +10,9 @@ const createUser = async (request, response) => {
   response.status(201).json(user);
 };
 
-const getUser = (request, response) => {
+const getUser = async (request, response) => {
   const id = +request.params.id;
-  let user = users.find((u) => u.id === id);
+  let user = await UserModel.findByPk(id);
 
   if (!user) {
     response.status(404).send("User not found");
@@ -23,26 +22,32 @@ const getUser = (request, response) => {
   response.json(user);
 };
 
-const updateUser = (request, response) => {
+const updateUser = async (request, response) => {
   const id = +request.params.id;
-  let user = users.find((u) => u.id === id);
+  let user = await UserModel.findByPk(id);
+
+  if (!user) {
+    response.status(404).send("User not found");
+    return;
+  }
+  user.email = request.body.email;
+  user.password = request.body.password;
+  user.save();
+
+  response.send(user);
+};
+
+const deleteUser = async (request, response) => {
+  const id = +request.params.id;
+  let user = await UserModel.findByPk(id);
 
   if (!user) {
     response.status(404).send("User not found");
     return;
   }
 
-  users = users.filter((u) => u.id !== id);
-  user = request.body;
-  user.id = id;
-  users.push(user);
+  await user.destroy();
 
-  response.send(user);
-};
-
-const deleteUser = (request, response) => {
-  const id = +request.params.id;
-  users = users.filter((u) => u.id !== id);
   response.status(204).send("");
 };
 
