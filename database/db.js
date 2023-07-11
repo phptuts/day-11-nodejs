@@ -1,5 +1,8 @@
 const { Sequelize } = require("sequelize");
+const createUserModel = require("../models/user.model");
 
 const sequelize = new Sequelize(process.env.DB_CONNECTION);
 
-module.exports = { sequelize };
+const UserModel = createUserModel(sequelize);
+
+module.exports = { sequelize, UserModel };
