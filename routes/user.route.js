@@ -1,5 +1,3 @@
-const auth = require("../middlewares/auth.middleware");
-
 const {
   getAllUser,
   createUser,
@@ -7,11 +5,12 @@ const {
   updateUser,
   deleteUser,
 } = require("../controllers/user.controller");
+const authorization = require("../middlewares/authorization.middleware");
 
 const router = require("express").Router();
-router.get("/", auth, getAllUser);
+router.get("/", authorization, getAllUser);
 router.post("/", createUser);
-router.get("/:id", auth, getUser);
+router.get("/:id", authorization, getUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 
