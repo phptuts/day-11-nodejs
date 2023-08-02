@@ -15,14 +15,6 @@ app.listen(3000, async () => {
   try {
     await sequelize.authenticate();
     await sequelize.sync({ force: true });
-    const user = await UserModel.create({
-      email: "b@gmail.com",
-      password: "password",
-    });
-    const payload = { userId: user.id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "4h",
-    });
     console.log("working");
   } catch (e) {
     console.log("error", e);

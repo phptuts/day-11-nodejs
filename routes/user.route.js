@@ -1,3 +1,5 @@
+const auth = require("../middlewares/auth.middleware");
+
 const {
   getAllUser,
   createUser,
@@ -7,9 +9,9 @@ const {
 } = require("../controllers/user.controller");
 
 const router = require("express").Router();
-router.get("/", getAllUser);
+router.get("/", auth, getAllUser);
 router.post("/", createUser);
-router.get("/:id", getUser);
+router.get("/:id", auth, getUser);
 router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 
