@@ -1,5 +1,7 @@
 const { UserModel } = require("../database/db");
 const bcyrpt = require("bcrypt");
+const fs = require('fs');
+const path = require("path");
 
 const getAllUser = async (request, response) => {
   const users = await UserModel.findAll();
@@ -56,10 +58,18 @@ const deleteUser = async (request, response) => {
   response.status(204).send("");
 };
 
+const uploadPicture = async (request, response) => {  
+  const user = request.user;
+  user.picture_url = `public/users/${request.file.filename}`;
+  await user.save();
+  response.send('ok');
+}
+
 module.exports = {
   getAllUser,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  uploadPicture
 };

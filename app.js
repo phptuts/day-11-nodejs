@@ -5,10 +5,12 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const userRoute = require("./routes/user.route");
 const loginRoute = require("./routes/login.route");
+
 const authentication = require("./middlewares/authentication.middleware");
 const app = express();
 app.use(express.json());
 app.use(authentication);
+app.use('/public', express.static('public'));
 
 app.use("/users", userRoute);
 app.use("/login", loginRoute);
@@ -16,7 +18,6 @@ app.use("/login", loginRoute);
 app.listen(3000, async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ force: true });
     console.log("working");
   } catch (e) {
     console.log("error", e);

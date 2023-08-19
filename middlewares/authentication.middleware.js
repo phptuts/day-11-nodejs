@@ -13,7 +13,9 @@ const authentication = async (req, res, next) => {
     const userId = payload.userId;
     const user = await UserModel.findByPk(userId);
     req.user = user;
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
 
   next();
 };

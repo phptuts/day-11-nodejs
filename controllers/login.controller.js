@@ -1,9 +1,20 @@
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../database/db");
 const bcyrpt = require("bcrypt");
+const { loginValidation } = require("../validators/user.validator");
+const transFormValidationErrorToFormResponse = require("../helpers/formErrors");
 
 const login = async (request, response) => {
-  const { email, password } = request.body;
+  let email, password;
+  try {
+     let data  = await loginValidation.validate(request.body, {abortEarly: false});
+     email = data.email;
+     password = data.password;
+
+  } catch(e) {
+    response.status(400).send(transFormValidationErrorToFormResponse(e));
+    return;
+  }
 
   const user = await UserModel.findOne({ where: { email } });
 
