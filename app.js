@@ -16,7 +16,6 @@ app.use("/login", loginRoute);
 app.listen(3000, async () => {
   try {
     await sequelize.authenticate();
-    await sequelize.sync({ force: true });
     console.log("working");
   } catch (e) {
     console.log("error", e);
