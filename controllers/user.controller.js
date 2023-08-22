@@ -56,10 +56,23 @@ const deleteUser = async (request, response) => {
   response.status(204).send("");
 };
 
+const uploadPicture = async (request, response) => {
+  if (request.hasError) {
+    response.status(400).json(request.errors);
+    return;
+  }
+
+  const user = request.user;
+  user.picture_url = `/public/users/${request.file.filename}`;
+  await user.save();
+  response.send("ok");
+};
+
 module.exports = {
   getAllUser,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  uploadPicture,
 };
