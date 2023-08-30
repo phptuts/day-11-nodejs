@@ -51,6 +51,11 @@ const deleteUser = async (request, response) => {
     return;
   }
 
+  if (user.id === request.user.id) {
+    response.status(403).send("You can not delete yourself.");
+    return;
+  }
+
   await user.destroy();
 
   response.status(204).send("");
