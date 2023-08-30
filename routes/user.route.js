@@ -9,6 +9,7 @@ const {
 const authorization = require("../middlewares/authorization.middleware");
 const path = require("path");
 const multer = require("multer");
+const isAdmin = require("../middlewares/isadmin.middleware");
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
     callback(null, path.join(__dirname, "..", "public", "users"));
@@ -48,7 +49,7 @@ router.get("/", authorization, getAllUser);
 router.post("/", createUser);
 router.get("/:id", authorization, getUser);
 router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.delete("/:id", authorization, isAdmin, deleteUser);
 router.post(
   "/:id/picture",
   authorization,
