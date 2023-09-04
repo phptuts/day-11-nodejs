@@ -2,6 +2,9 @@ const jwt = require("jsonwebtoken");
 const { UserModel } = require("../database/db");
 const bcyrpt = require("bcrypt");
 const { loginValidator } = require("../validators/user.validators");
+const fs = require("fs");
+const path = require("path");
+const sendMessage = require("../helpers/send-message.helper");
 
 const login = async (request, response) => {
   try {
@@ -25,10 +28,14 @@ const login = async (request, response) => {
     }
 
     const payload = { userId: user.id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    var privateKey = fs.readFileSync(path.join(__dirname, "..", "private.key"));
+
+    const token = jwt.sign(payload, privateKey, {
       expiresIn: "4h",
+      algorithm: "RS256",
     });
     response.send({ token });
+    sendMessage(request.wss, JSON.stringify({ msg: "login_succes" }));
   } catch (e) {
     response.status(400).send("bad request");
     return;
