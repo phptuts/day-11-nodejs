@@ -1,5 +1,9 @@
 const { UserModel } = require("../database/db");
 const bcyrpt = require("bcrypt");
+const {
+  createUserValidator,
+  updateUserValidator,
+} = require("../validators/user.validators");
 
 const getAllUser = async (request, response) => {
   const users = await UserModel.findAll();
@@ -7,12 +11,19 @@ const getAllUser = async (request, response) => {
 };
 
 const createUser = async (request, response) => {
-  const userData = request.body;
-  userData.password = await bcyrpt.hash(request.body.password, 12);
-  const user = await UserModel.create(userData);
-  const jsonData = user.toJSON();
-  delete jsonData.password;
-  response.status(201).json(jsonData);
+  try {
+    const userData = await createUserValidator.validate(request.body, {
+      abortEarly: false,
+    });
+    userData.password = await bcyrpt.hash(request.body.password, 12);
+    const user = await UserModel.create(userData);
+    const jsonData = user.toJSON();
+    delete jsonData.password;
+    response.status(201).json(jsonData);
+  } catch (error) {
+    response.status(400).send("bad request");
+    return;
+  }
 };
 
 const getUser = async (request, response) => {
@@ -28,18 +39,28 @@ const getUser = async (request, response) => {
 };
 
 const updateUser = async (request, response) => {
-  const id = +request.params.id;
-  let user = await UserModel.findByPk(id);
+  try {
+    const id = +request.params.id;
+    let user = await UserModel.findByPk(id);
 
-  if (!user) {
-    response.status(404).send("User not found");
+    if (!user) {
+      response.status(404).send("User not found");
+      return;
+    }
+    const userData = await updateUserValidator.validate(request.body, {
+      abortEarly: false,
+      context: request.user.email,
+    });
+    user.email = userData.email;
+    user.password = await bcyrpt.hash(userData.password, 12);
+    await user.save();
+    const jsonData = user.toJSON();
+    delete jsonData.password;
+    response.json(jsonData);
+  } catch (error) {
+    response.status(400).send("bad request");
     return;
   }
-  user.email = request.body.email;
-  user.password = request.body.password;
-  user.save();
-
-  response.send(user);
 };
 
 const deleteUser = async (request, response) => {
