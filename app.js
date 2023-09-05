@@ -7,6 +7,20 @@ const userRoute = require("./routes/user.route");
 const loginRoute = require("./routes/login.route");
 const authentication = require("./middlewares/authentication.middleware");
 const app = express();
+const { WebSocketServer } = require("ws");
+
+const wss = new WebSocketServer({ port: 5129 });
+
+wss.on("connection", function connection(client) {
+  client.on("error", console.error);
+
+  client.on("message", function message(data) {
+    console.log("received: %s", data);
+  });
+
+  client.send("send message");
+});
+
 app.use(express.json());
 app.use(authentication);
 
