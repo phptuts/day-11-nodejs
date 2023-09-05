@@ -4,6 +4,7 @@ const bcyrpt = require("bcrypt");
 const { loginValidator } = require("../validators/user.validators");
 const fs = require("fs");
 const path = require("path");
+const sendMessage = require("../helpers/send-message.helper");
 
 const login = async (request, response) => {
   try {
@@ -34,6 +35,7 @@ const login = async (request, response) => {
       algorithm: "RS256",
     });
     response.send({ token });
+    sendMessage(request.wss, { type: "login_success" });
   } catch (e) {
     response.status(400).send("bad request");
     return;

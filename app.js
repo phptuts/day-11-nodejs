@@ -21,6 +21,11 @@ wss.on("connection", function connection(client) {
   client.send("send message");
 });
 
+app.use((request, response, next) => {
+  request.wss = wss;
+  next();
+});
+
 app.use(express.json());
 app.use(authentication);
 
