@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const userRoute = require("./routes/user.route");
 const loginRoute = require("./routes/login.route");
 const authentication = require("./middlewares/authentication.middleware");
+const path = require("path");
 const app = express();
 const { WebSocketServer } = require("ws");
 
@@ -29,6 +30,9 @@ app.use((request, response, next) => {
 app.use(express.json());
 app.use(authentication);
 
+app.get("/", (request, response) => {
+  response.sendFile(path.join(__dirname, "views", "index.html"));
+});
 app.use("/users", userRoute);
 app.use("/login", loginRoute);
 app.use("/public", express.static("public"));
